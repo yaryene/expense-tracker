@@ -11,6 +11,7 @@ import {
   LogOut,
 } from 'lucide-react';
 import { Login, UserSession } from './Login';
+import { BirrSign } from './BirrSign';
 
 /* ==========================================================================
    1. TYPES
@@ -578,7 +579,13 @@ export const App: React.FC = () => {
               {/* Field: Amount */}
               <div>
                 <label htmlFor="amount" className="block text-xs font-semibold text-slate-700 mb-1">
-                  Amount ($) <span className="text-rose-500">*</span>
+                  <span className="inline-flex items-center gap-1">
+                    <span>Amount</span>
+                    <span className="text-slate-500 font-normal">
+                      (<BirrSign className="h-[0.9em] w-auto inline-block -mt-0.5 text-slate-700" />)
+                    </span>
+                  </span>{' '}
+                  <span className="text-rose-500">*</span>
                 </label>
                 <input
                   id="amount"
@@ -764,7 +771,10 @@ export const App: React.FC = () => {
                             </span>
                           </td>
                           <td className="py-3 px-4 font-mono font-bold text-slate-900 text-right">
-                            ${Number(expense.amount).toFixed(2)}
+                            <span className="inline-flex items-center justify-end gap-1">
+                              <BirrSign className="h-[0.95em] w-auto text-slate-600" />
+                              <span>{Number(expense.amount).toFixed(2)}</span>
+                            </span>
                           </td>
                           <td className="py-3 px-4 text-xs text-slate-500 font-mono">
                             {expense.date}
@@ -814,11 +824,13 @@ export const App: React.FC = () => {
             {expenses.length > 0 && (
               <div className="p-4 bg-slate-50/80 border-t border-slate-200 flex items-center justify-between text-xs">
                 <span className="text-slate-500 font-medium">Total:</span>
-                <span className="font-mono text-sm font-bold text-slate-900">
-                  $
-                  {expenses
-                    .reduce((sum, item) => sum + Number(item.amount || 0), 0)
-                    .toFixed(2)}
+                <span className="font-mono text-sm font-bold text-slate-900 inline-flex items-center gap-1">
+                  <BirrSign className="h-[1em] w-auto text-slate-900" />
+                  <span>
+                    {expenses
+                      .reduce((sum, item) => sum + Number(item.amount || 0), 0)
+                      .toFixed(2)}
+                  </span>
                 </span>
               </div>
             )}
@@ -862,8 +874,9 @@ export const App: React.FC = () => {
               </div>
               <div className="flex justify-between py-1 border-b border-slate-100">
                 <span className="text-slate-500 font-medium">Amount:</span>
-                <span className="font-mono font-bold text-emerald-600 text-sm">
-                  ${Number(selectedExpense.amount).toFixed(2)}
+                <span className="font-mono font-bold text-emerald-600 text-sm inline-flex items-center gap-1">
+                  <BirrSign className="h-[1em] w-auto text-emerald-600" />
+                  <span>{Number(selectedExpense.amount).toFixed(2)}</span>
                 </span>
               </div>
               <div className="flex justify-between py-1">
