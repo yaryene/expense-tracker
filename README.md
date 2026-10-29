@@ -32,7 +32,8 @@ expense-tracker/
 │
 ├── expense-tracker-ui/        # React 18 + TypeScript Frontend (Port 5173)
 │   ├── src/
-│   │   ├── App.tsx            # Single-page demo UI
+│   │   ├── App.tsx            # Main Tracker dashboard & auth gate
+│   │   ├── Login.tsx          # Simple login form (root / root)
 │   │   ├── main.tsx           # React entry point
 │   │   └── index.css          # Tailwind CSS styles
 │   ├── vite.config.ts         # Dev server & reverse proxy
@@ -102,6 +103,8 @@ Open **`http://localhost:5173`** in your browser.
 
 | HTTP Method | Endpoint | Spring Boot Annotation | Description |
 | :--- | :--- | :--- | :--- |
+| **POST** | `/api/v1/auth/register` | `@PostMapping` | Register a new user (`201 Created`) |
+| **POST** | `/api/v1/auth/login` | `@PostMapping` | Validate credentials against MySQL (`200 OK` or `401 Unauthorized`) |
 | **POST** | `/api/v1/expenses` | `@PostMapping` | Create an expense with `@Valid` DTO validation (`201 Created`) |
 | **GET** | `/api/v1/expenses` | `@GetMapping` | Retrieve expenses list (`200 OK`) |
 | **GET** | `/api/v1/expenses/{id}` | `@GetMapping("/{id}")` | Fetch single expense details by ID (`200 OK`) |

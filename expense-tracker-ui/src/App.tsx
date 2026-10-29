@@ -8,7 +8,9 @@ import {
   ShieldAlert,
   Activity,
   X,
+  LogOut,
 } from 'lucide-react';
+import { Login, UserSession } from './Login';
 
 /* ==========================================================================
    1. TYPES
@@ -77,6 +79,21 @@ function extractValidationErrors(data: any): SpringValidationErrors {
    ========================================================================== */
 
 export const App: React.FC = () => {
+  // Authentication / User Session State
+  const [currentUser, setCurrentUser] = useState<UserSession | null>(() => {
+    try {
+      const saved = sessionStorage.getItem('expense_tracker_user');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('expense_tracker_user');
+    setCurrentUser(null);
+  };
+
   // Data State
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null);
@@ -330,13 +347,20 @@ export const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    fetchExpenses();
-    pingBackend();
-  }, [fetchExpenses, pingBackend]);
+    if (currentUser) {
+      fetchExpenses();
+      pingBackend();
+    }
+  }, [currentUser, fetchExpenses, pingBackend]);
 
   /* ==========================================================================
      5. RENDER
      ========================================================================== */
+
+  // Auth Gate: Render Login page if user is not authenticated
+  if (!currentUser) {
+    return <Login onLogin={(session) => setCurrentUser(session)} />;
+  }
 
   return (
     <div className="min-h-screen bg-slate-100 text-slate-800 flex flex-col font-sans">
@@ -389,7 +413,7 @@ export const App: React.FC = () => {
               }}
               disabled={isLoading || isCheckingHealth}
               title="Refresh Data"
-              className="inline-flex items-center space-x-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 active:bg-slate-100 border border-slate-300 rounded-lg shadow-2xs transition-all disabled:opacity-50"
+              className="inline-flex items-center space-x-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 active:bg-slate-100 border border-slate-300 rounded-lg shadow-2xs transition-all disabled:opacity-50 cursor-pointer"
             >
               <RefreshCw
                 className={`w-3.5 h-3.5 text-slate-500 ${
@@ -398,6 +422,28 @@ export const App: React.FC = () => {
               />
               <span className="hidden sm:inline">Refresh</span>
             </button>
+
+            {/* Logged in User & Logout */}
+            <div className="flex items-center space-x-2 pl-3 border-l border-slate-200">
+              <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-slate-50 border border-slate-200">
+                <div className="w-5 h-5 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-[10px]">
+                  {currentUser.username.charAt(0).toUpperCase()}
+                </div>
+                <span className="text-xs font-semibold text-slate-800">
+                  {currentUser.username}
+                </span>
+              </div>
+
+              <button
+                onClick={handleLogout}
+                id="logout-button"
+                title="Log out of session"
+                className="inline-flex items-center space-x-1.5 px-2.5 py-1.5 text-xs font-medium text-rose-700 hover:text-rose-800 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-lg transition-colors cursor-pointer"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Logout</span>
+              </button>
+            </div>
           </div>
         </div>
       </header>
