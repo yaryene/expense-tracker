@@ -1,0 +1,23 @@
+{
+  "name": "expense-tracker",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Full-stack Expense Tracker monorepo: Spring Boot 3 + MySQL API & React 18 + TypeScript UI",
+  "scripts": {
+    "dev": "npm --prefix expense-tracker-ui run dev",
+    "dev:ui": "npm --prefix expense-tracker-ui run dev",
+    "build:ui": "npm --prefix expense-tracker-ui run build",
+    "dev:api": "cd expense-tracker-api && ./mvnw spring-boot:run",
+    "build:api": "cd expense-tracker-api && ./mvnw clean package -DskipTests",
+    "test:api": "cd expense-tracker-api && ./mvnw test",
+    "install:all": "npm --prefix expense-tracker-ui install"
+  },
+  "keywords": [
+    "spring-boot",
+    "react",
+    "typescript",
+    "mysql",
+    "vite",
+    "monorepo"
+  ]
+}
